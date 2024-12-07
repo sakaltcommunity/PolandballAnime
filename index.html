@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>パラオ覚醒アニメ</title>
+    <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: linear-gradient(135deg, #cc0000, #cc6600, #cccc00, #00cc00, #00cccc, #0000cc, #cc00cc)
+        }
+        #scene {
+            position: relative;
+            width: 600px;
+            height: 400px;
+            overflow: hidden;
+        }
+        .character, .effect {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .effect {
+            width: 50px;
+            height: 50px;
+            background-color: transparent;
+            opacity: 0;
+        }
+        #message {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 20px;
+            display: none; /* 初めは非表示 */
+        }
+    </style>
+</head>
+<body>
+
+<div id="scene">
+    <img id="palau" class="character" src="palau_image.png" alt="Palau" width="150">
+    <div id="electricEffect" class="effect"></div>
+</div>
+
+<div id="message"></div>
+
+<script>
+    // 画像のパス（パラオのキャラクター画像）を指定してください
+    const palauImage = document.getElementById('palau');
+    const electricEffect = document.getElementById('electricEffect');
+    const messageElement = document.getElementById('message');
+
+    // 攻撃を受けて覚醒するアニメーション
+    function palauAwakens() {
+        // 文字を表示
+        showMessage("パラオつおい！");
+
+        // 6回の電撃エフェクト
+        anime({
+            targets: electricEffect,
+            opacity: [0, 1, 0],
+            scale: [1, 1.5, 1],
+            duration: 100, // 1回のエフェクトの長さ
+            loop: 6, // 6回繰り返す
+            easing: 'easeInOutSine',
+            delay: 1000, // 最初の電撃エフェクトに遅延を加える
+            complete: function() {
+                // 電撃エフェクトの後に反撃のアニメーション
+                palauCounterAttack();
+            }
+        });
+    }
+
+    // 反撃（キャラが強くなる）
+    function palauCounterAttack() {
+        // 文字を表示
+        showMessage("パラオの反撃！");
+
+        anime({
+            targets: palauImage,
+            scale: [1, 1.5], // 覚醒してサイズが大きくなる
+            rotate: '360deg', // 回転
+            duration: 1000, // 反撃アニメーションの時間
+            easing: 'easeOutQuad',
+            complete: function() {
+                console.log("パラオの反撃！");
+            }
+        });
+    }
+
+    // 画面下にメッセージを表示
+    function showMessage(text) {
+        messageElement.textContent = text;
+        messageElement.style.display = 'block';  // メッセージを表示
+
+        // メッセージを一定時間後に非表示にする
+        anime({
+            targets: messageElement,
+            opacity: [1, 0],  // 透明度を変化させて消す
+            duration: 2000,  // 2秒かけてフェードアウト
+            delay: 2000,     // 2秒遅延させてからフェードアウト開始
+            easing: 'easeOutSine',
+            complete: function() {
+                messageElement.style.display = 'none';  // 完全に消した後に非表示に戻す
+            }
+        });
+    }
+
+    // ページがロードされた後にアニメーション開始
+    window.onload = function() {
+        palauAwakens();
+    }
+</script>
+
+</body>
+</html>
